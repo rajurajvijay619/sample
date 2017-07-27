@@ -1,31 +1,171 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title></title>
+	<title>
+		PAINT 
+	
+	</title>
+	<link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
 	<style type="text/css">
-	.container
-	{
-		background: red;
-	}
-	.inner1
-	{
-		background: yellow;
-	}
-	.inner2
-	{
-		background: blue;
-	}
-</style>
+		.logo
+		{
+			background: rgb(16, 14, 15);
+		}
+        body
+        {
+        	background: url('bg.jpg');
+        }
+		canvas
+		{
+			border:2px solid black;
+			background: white;
+			opacity: 0.8;
+		}
+		a
+		{
+			text-decoration: none;
+			color: white;
+		}
+		.control
+		{
+			margin-top: 20%;
+			margin-bottom: 20%;
+		}
+		.btn-color button
+		{
+           height: 50px;
+           width: 100%;
+           border: 1px solid black;
+           /*margin:8%;*/
+
+		}
+		#white{ background: white ;   }
+		#black{ background: black ;   }
+		#red{ background: red ;   }
+		#pink{ background: pink ;   }
+		#blue{ background: blue ;   }
+		#green{ background: green ;   }
+        #strokewidth
+        {
+        	font-size: 1.4em;
+        	color:white;
+        }
+	</style>
 </head>
-
 <body>
-<div class="container">
-	this is container
-	<div class="inner1">This is inner1
-	<div class="inner2">This is inner2</div>
 
-	inner1</div>	
-	container	
+
+<div class="container">
+	<div class="row logo">
+		<div class="col-lg-4 center-block text-center">
+			<button class="btn btn-info btn-lg align-middle control" onclick="clearcanvas()">CLEAR</button>
+		</div>
+		<div class="col-lg-4">
+			<img src="logo.jpg">
+		</div>
+		<div class="col-lg-4">
+			
+		  <button class="btn btn-success btn-lg control"><a id="download">Download as image</a></button>	
+			
+		</div>
+   	</div><!--   -->
+   	<div class="row bg-success ">
+   		<div class="col-lg-2 col-sm-12 btn-color"><button id="white" class="btn" onclick="white()"></button></div>
+   		<div class="col-lg-2 col-sm-12 btn-color"><button id="red" class="btn" onclick="red()"></button></div>
+   		<div class="col-lg-2 col-sm-12 btn-color"><button id="blue" class="btn" onclick="blue()"></button></div>
+   		<div class="col-lg-2 col-sm-12 btn-color"><button id="green" class="btn" onclick="green()"></button></div>
+   		<div class="col-lg-2 col-sm-12 btn-color"><button id="pink" class="btn" onclick="pink()"></button></div>
+   		<div class="col-lg-2 col-sm-12 btn-color"><button id="black" class="btn" onclick="black()"></button></div>
+   	</div>
+   	<div class="row">
+   		<div class="col-lg-2" id="strokewidth">STROKE WIDTH : </div>
+   	    <div class="col-lg-10"><input id="range" type="range" min="0" max="50" value="20" step="5"  /></div>
+   	</div> <!-- onmousedown="showCoords(event) ;update();" onmousemove="showCoords(event);update();"" -->
+    <div class="row">
+    	<canvas  class="col-lg-12" id="canvas" width="800" height="300"></canvas>
+    </div>
+
 </div>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
 </body>
+<script type="text/javascript">
+var canvas = document.getElementById('canvas');
+var ctx = canvas.getContext('2d');
+var index=5;
+var colors=["white","red","blue","green","pink","black"];
+x=0,y=0;
+var mousedown=false;
+var link=document.getElementById("download");
+
+// link.innerHTML = 'download image';
+link.addEventListener('click', function(ev) {
+    link.href = canvas.toDataURL();
+    link.download = "mypainting.png";
+}, false);
+
+var flag=true;
+
+var isMouseDown = false;
+canvas.onmousedown = function()
+ { 
+ 	isMouseDown = true 
+ };
+
+canvas.onmousemove = function() 
+{ 
+	if(isMouseDown) 
+	{ 
+    showCoords(event); update();
+    } 
+};
+canvas.onmouseup   = function()
+ { 
+ 	isMouseDown = false;
+ };
+
+
+
+function clearcanvas()
+{
+     ctx.clearRect(0,0,canvas.width,canvas.height);
+}
+
+function white(){	index=0; }
+function red()  {	index=1; }
+function blue() {	index=2; }
+function green(){	index=3; }
+function pink() {	index=4; }
+function black(){	index=5; }
+
+function showCoords(event) {
+	 rect = canvas.getBoundingClientRect();
+	  scaleX = canvas.width / rect.width,    // relationship bitmap vs. element for X
+      scaleY = canvas.height / rect.height;
+      x= (event.clientX - rect.left) * scaleX,   // scale mouse coordinates after they have
+    y=(event.clientY - rect.top) * scaleY;
+    
+}
+
+  
+// function draw()
+// {
+// 	console.log("ola");
+// 	ctx.fillRect(x,y,3,3);
+// }
+
+
+function update()
+{ 
+    
+    thick=parseInt(document.getElementById("range").value);
+	ctx.fillStyle=colors[index];
+    ctx.fillRect(x,y,thick,thick);
+
+	console.log(x,y);
+}
+
+// setInterval(update,1);
+
+</script>
 </html>
